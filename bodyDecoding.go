@@ -11,7 +11,7 @@ type Regions struct {
 
 type Response struct {
 	Next string
-	Previous string
+	Previous *string
 	Results []Regions
 }
 
