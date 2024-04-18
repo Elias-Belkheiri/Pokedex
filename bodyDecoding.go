@@ -5,23 +5,19 @@ import (
 	"log"
 )
 
-type Pokemon struct {
+type Regions struct {
 	Name string
 }
 
 type Response struct {
 	Next string
 	Previous string
-	Results []Pokemon
+	Results []Regions
 }
 
-func decode(body []byte) Response {
-	var response Response
-
+func decode(body []byte, response *Response) {
 	err := json.Unmarshal(body, &response)
 	if err != nil {
 		log.Fatal("error parsing the JSON body")
 	}
-
-	return response
 }

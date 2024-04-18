@@ -15,6 +15,8 @@ type clicommand struct {
 	action func()
 }
 
+var response Response = Response{"https://pokeapi.co/api/v2/location?limit=20", "", nil}
+
 func helpCmd() {
 	fmt.Print("Welcome to the Pokedex!\n" +
 		"Usage:\n\n" +
@@ -26,35 +28,42 @@ func exitCmd() {
 	os.Exit(0)
 }
 
+func mapCmd() {
+	resp, err := http.Get(response.Next)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	decode(body, &response)
+
+	for _, region := range(response.Results) {
+		fmt.Println(region.Name)
+	}
+}
+
 func main() {
 	cmds := make(map[string]clicommand)
 	scanner := bufio.NewScanner(os.Stdin)
 
 	cmds["help"] = clicommand{"help", "Displays a help message", helpCmd}
 	cmds["exit"] = clicommand{"exit", "exits the program", exitCmd}
+	cmds["map"] = clicommand{"help", "displays the names of 20 location areas in the Pokemon world. Each subsequent call to map should display the next 20 locations, and so on.", mapCmd}
 
 	for {
 		fmt.Print("Pokedex > ")
 	
 		scanner.Scan()
 		input := scanner.Text()
-	
-		if input == "help" || input == "exit"{
-			// cmds[input].action()
-			resp, err := http.Get("https://pokeapi.co/api/v2/location/?limit=20")
-
-			if err != nil {
-				log.Fatalln(err)
-			}
-
-			body, err := io.ReadAll(resp.Body)
-
-			if err != nil {
-				log.Fatalln(err)
-			}
-
-			respJSON := decode(body)
-			fmt.Println(respJSON.Next)
+		
+		if input == "help" || input == "exit" || input == "map" {
+			cmds[input].action()
 		} else {
 			fmt.Println("Invalid cmd")
 		}
