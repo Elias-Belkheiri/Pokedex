@@ -54,7 +54,6 @@ func main() {
 			}
 
 			respJSON := decode(body)
-			// fmt.Println(body)
 			fmt.Println(respJSON.Next)
 		} else {
 			fmt.Println("Invalid cmd")
