@@ -15,13 +15,15 @@ type clicommand struct {
 	action func()
 }
 
-var response Response = Response{"https://pokeapi.co/api/v2/location?limit=20", nil, nil}
+var response = Response{"https://pokeapi.co/api/v2/location?limit=20", nil, nil}
+var	cmds = make(map[string]clicommand)
 
 func helpCmd() {
 	fmt.Print("Welcome to the Pokedex!\n" +
-		"Usage:\n\n" +
-		"help: Displays a help message\n" +
-		"exit: Exit the Pokedex\n")
+		"Usage:\n\n")
+	for key, value := range(cmds) {
+		fmt.Print(key + ": " + value.description + "\n")
+	}
 }
 
 func exitCmd() {
@@ -73,7 +75,6 @@ func mapbCmd() {
 }
 
 func main() {
-	cmds := make(map[string]clicommand)
 	scanner := bufio.NewScanner(os.Stdin)
 
 	cmds["help"] = clicommand{"help", "Displays a help message", helpCmd}
