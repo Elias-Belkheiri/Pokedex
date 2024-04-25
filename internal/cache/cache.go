@@ -21,13 +21,13 @@ func newCacheEntry(val []byte) CacheEntry {
 }
 
 func (c Cache) Add(key string, val []byte) {
+	fmt.Println("---- Adding cache ----")
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.C[key] = newCacheEntry(val)
 }
 
 func (c Cache) Get(key string) ([]byte, bool) {
-	fmt.Println("---- Adding cache ----")
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	val, exists := c.C[key]
