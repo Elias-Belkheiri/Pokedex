@@ -16,7 +16,7 @@ type clicommand struct {
 	action func()
 }
 
-var response = Response{"https://pokeapi.co/api/v2/location?offset=0&limit=20", nil, nil}
+var response = Response{"https://pokeapi.co/api/v2/location-area?offset=0&limit=20", nil, nil}
 var	cmds = make(map[string]clicommand)
 var	cached = cache.Cache{C: make(map[string]cache.CacheEntry)}
 
