@@ -21,7 +21,6 @@ func newCacheEntry(val []byte) CacheEntry {
 }
 
 func (c Cache) Add(key string, val []byte) {
-	fmt.Println("---- Adding cache ----")
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.C[key] = newCacheEntry(val)

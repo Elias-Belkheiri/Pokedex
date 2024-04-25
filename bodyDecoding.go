@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"log"
 )
 
 type Regions struct {
@@ -15,9 +14,20 @@ type Response struct {
 	Results []Regions
 }
 
-func decode(body []byte, response *Response) {
-	err := json.Unmarshal(body, &response)
-	if err != nil {
-		log.Fatal("error parsing the JSON body")
-	}
+type Poke struct {
+	Name	string
+	Url		string
+}
+
+type Pokemon struct {
+	Pokemon Poke
+}
+type LocationArea struct {
+	Name				string
+	Pokemon_Encounters	[]Pokemon
+}
+
+func decode[k Response | LocationArea](body []byte, response *k) error{
+	err := json.Unmarshal(body, response)
+	return err
 }
