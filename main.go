@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"example.com/cache"
 )
 
 type clicommand struct {
@@ -17,6 +18,7 @@ type clicommand struct {
 
 var response = Response{"https://pokeapi.co/api/v2/location?limit=20", nil, nil}
 var	cmds = make(map[string]clicommand)
+var	cached = cache.Cache{C: make(map[string]cache.CacheEntry)}
 
 func helpCmd() {
 	fmt.Print("Welcome to the Pokedex!\n" +
@@ -31,16 +33,22 @@ func exitCmd() {
 }
 
 func mapCmd() {
-	resp, err := http.Get(response.Next)
+	body, exists := cached.Get(response.Next)
 
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	body, err := io.ReadAll(resp.Body)
-
-	if err != nil {
-		log.Fatalln(err)
+	if (!exists) {
+		resp, err := http.Get(response.Next)
+		if err != nil {
+			log.Fatalln(err)
+		}
+	
+		body, err = io.ReadAll(resp.Body)
+	
+		if err != nil {
+			log.Fatalln(err)
+		}
+		cached.Add(response.Next, body)
+	} else {
+		fmt.Println("---- Getting cache ----")
 	}
 
 	decode(body, &response)
@@ -55,18 +63,24 @@ func mapbCmd() {
 		fmt.Println("No previous regions to show")
 		return
 	}
-	resp, err := http.Get(*(response.Previous))
 
-	if err != nil {
-		log.Fatalln(err)
+	body, exists := cached.Get(*(response.Previous))
+	if (!exists) {
+		resp, err := http.Get(*(response.Previous))
+	
+		if err != nil {
+			log.Fatalln(err)
+		}
+	
+		body, err = io.ReadAll(resp.Body)
+	
+		if err != nil {
+			log.Fatalln(err)
+		}
+		cached.Add(*response.Previous, body)
+	} else {
+		fmt.Println("---- Getting cache ----")
 	}
-
-	body, err := io.ReadAll(resp.Body)
-
-	if err != nil {
-		log.Fatalln(err)
-	}
-
 	decode(body, &response)
 
 	for _, region := range(response.Results) {
