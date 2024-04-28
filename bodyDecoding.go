@@ -17,6 +17,8 @@ type Response struct {
 type Poke struct {
 	Name	string
 	Url		string
+	Height	int
+	Weight	int
 }
 
 type Pokemon struct {
@@ -27,7 +29,7 @@ type LocationArea struct {
 	Pokemon_Encounters	[]Pokemon
 }
 
-func decode[k Response | LocationArea](body []byte, response *k) error{
+func decode[k Response | LocationArea | Poke](body []byte, response *k) error{
 	err := json.Unmarshal(body, response)
 	return err
 }
