@@ -7,7 +7,7 @@ This is a REPL Pokedex program that allows users to search for and view informat
 - Search for Pokemon by name or ID
 - Search for Location areas by name or ID
 - View detailed information about each Pokemon and Location Area
-- Implemented a caching mechanism for responses from the PokeAPI to have a faster access to the data we want  
+- A caching mechanism for responses from the PokeAPI to have a faster access to the data we want  
 
 ## Installation
 1. Make sure you have Go installed in your system
